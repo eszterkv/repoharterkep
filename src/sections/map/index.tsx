@@ -7,30 +7,30 @@ import './leaflet.css'
 type Venue = {
   id: string
   name: string
-  description?: string
   coordinates: LatLngTuple
+  system?: string
+  price?: number
+  notes?: string
 }
 
 const venues: Venue[] = [
-    {
-      id: '960',
-      name: "Bearbrook Skateboard Park",
-      description: "Flat asphalt surface, 5 components",
-      coordinates: [45.383321536272049, -75.3372987731628],
-    },
-    {
-      id: '1219',
-      name: "Bob MacQuarrie Skateboard Park (SK8 Extreme Park)",
-      description: "Flat asphalt surface, 10 components, City run learn to skateboard programs, City run skateboard camps in summer",
-      coordinates: [45.467134581917357, -75.546518086577947],
-    }
+  {
+    id: '960',
+    name: 'Budapest Park',
+    coordinates: [47.4676345, 19.0745992],
+    system: 'Park',
+    price: 300,
+    notes: 'teszt',
+  },
 ]
+
+const budapestCoords: LatLngTuple = [47.497913, 19.040236]
 
 export const Map: React.FC = () => {
   const [activeVenue, setActiveVenue] = useState<Venue | null>()
 
   return (
-    <MapContainer center={[45.4, -75.7]} zoom={12} scrollWheelZoom={false}>
+    <MapContainer center={budapestCoords} zoom={13} scrollWheelZoom={true}>
       {activeVenue && (
         <Popup
           position={activeVenue.coordinates}
@@ -40,7 +40,17 @@ export const Map: React.FC = () => {
         >
           <div>
             <h2>{activeVenue.name}</h2>
-            <p>{activeVenue.description}</p>
+            <dl>
+              <div>
+                <dt>Rendszer:</dt>
+                <dd>{activeVenue.system}</dd>
+              </div>
+              <div>
+                <dt>Ár:</dt>
+                <dd>{activeVenue.price}</dd>
+              </div>
+            </dl>
+            <p>{activeVenue.notes}</p>
           </div>
         </Popup>
       )}
@@ -48,7 +58,6 @@ export const Map: React.FC = () => {
         <Marker
           key={venue.id}
           position={venue.coordinates}
-          icon={new Icon({ iconUrl: "https://placekitten.com/20/20" })}
           eventHandlers={{
             click: () => { setActiveVenue(venue) }
           }}
