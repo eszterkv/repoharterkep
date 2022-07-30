@@ -1,0 +1,20 @@
+{
+  "include": [
+    "src",
+    "custom.d.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "public"
+  ],
+  "compilerOptions": {
+    "allowJs": true,
+    "target": "es6",
+    "module": "commonjs",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "jsx": "react-jsx"
+  }
+}
