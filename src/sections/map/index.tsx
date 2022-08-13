@@ -10,6 +10,7 @@ type Venue = {
   coordinates: LatLngTuple
   system?: string
   price?: number
+  moneyBack?: boolean
   notes?: string
 }
 
@@ -20,40 +21,61 @@ const venues: Venue[] = [
     coordinates: [47.4676345, 19.0745992],
     system: 'Park',
     price: 300,
+    moneyBack: false,
     notes: 'teszt',
   },
 ]
 
 const budapestCoords: LatLngTuple = [47.497913, 19.040236]
 
+const VenueProp: React.FC<{ label: string, value: string }> = ({ label, value = '' }) => (
+  <div>
+    <dt>{label}</dt>
+    <dd>{value}</dd>
+  </div>
+)
+
+function toMoneyBackString(moneyBack?: boolean) {
+  if (moneyBack === null || moneyBack === undefined)
+    return 'nem tudni'
+
+  return moneyBack ? 'igen' : 'nem'
+}
+
 export const Map: React.FC = () => {
   const [activeVenue, setActiveVenue] = useState<Venue | null>()
 
+  const ActiveVenuePopup: React.FC<Venue> = ({
+    name,
+    coordinates,
+    system,
+    price,
+    moneyBack,
+    notes,
+  }) => {
+    return (
+      <Popup
+        position={coordinates}
+        eventHandlers={{
+          popupclose: () => { setActiveVenue(null) }
+        }}
+      >
+        <div>
+          <h2>{name}</h2>
+          <dl>
+            <VenueProp label="Rendszer" value={system || 'nem ismert'} />
+            <VenueProp label="Ár" value={`${price} Ft`} />
+            <VenueProp label="Visszaadják a pénzt?" value={toMoneyBackString(moneyBack)} />
+          </dl>
+          <p>{notes}</p>
+        </div>
+      </Popup>
+    )
+  }
+
   return (
     <MapContainer center={budapestCoords} zoom={13} scrollWheelZoom={true}>
-      {activeVenue && (
-        <Popup
-          position={activeVenue.coordinates}
-          eventHandlers={{
-            popupclose: () => { setActiveVenue(null) }
-          }}
-        >
-          <div>
-            <h2>{activeVenue.name}</h2>
-            <dl>
-              <div>
-                <dt>Rendszer:</dt>
-                <dd>{activeVenue.system}</dd>
-              </div>
-              <div>
-                <dt>Ár:</dt>
-                <dd>{activeVenue.price}</dd>
-              </div>
-            </dl>
-            <p>{activeVenue.notes}</p>
-          </div>
-        </Popup>
-      )}
+      {activeVenue && <ActiveVenuePopup {...activeVenue} />}
       {venues.map(venue => (
         <Marker
           key={venue.id}
