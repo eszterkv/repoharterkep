@@ -1,7 +1,12 @@
 import { useState } from 'react'
+import { useDebouncedCallback } from 'use-debounce'
 
 export const Header: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+
+  const search = useDebouncedCallback((e) => {
+    // TODO
+  }, 200)
 
   return (
     <>
@@ -9,6 +14,13 @@ export const Header: React.FC = () => {
         <h1 className="text-xl font-semibold text-gray-800">
           Repohár térkép
         </h1>
+        <input
+          type="text"
+          aria-label="keresés"
+          placeholder="keresés"
+          className="border border-gray-400 py-1 px-2"
+          onChange={search}
+        />
         {/*
         <button
           className="bg-orange-400 text-white"
