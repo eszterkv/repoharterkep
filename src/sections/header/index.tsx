@@ -1,11 +1,14 @@
 import { useState } from 'react'
 import { useDebouncedCallback } from 'use-debounce'
 
+import { useSearch } from '../../hooks/use-search'
+
 export const Header: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const { setSearchText } = useSearch()
 
   const search = useDebouncedCallback((e) => {
-    // TODO
+    setSearchText(e.target.value)
   }, 200)
 
   return (
@@ -18,7 +21,7 @@ export const Header: React.FC = () => {
           type="text"
           aria-label="keresés"
           placeholder="keresés"
-          className="border border-gray-400 py-1 px-2"
+          className="border border-gray-400 py-1 px-2 mt-4 w-full md:max-w-sm"
           onChange={search}
         />
         {/*

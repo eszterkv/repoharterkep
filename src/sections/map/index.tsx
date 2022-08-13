@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { LatLngTuple } from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
+import { useSearch } from '../../hooks/use-search'
 import './leaflet.css'
 
 type Venue = {
@@ -44,6 +45,7 @@ function toMoneyBackString(moneyBack?: boolean) {
 
 export const Map: React.FC = () => {
   const [activeVenue, setActiveVenue] = useState<Venue | null>()
+  const { searchText } = useSearch()
 
   const ActiveVenuePopup: React.FC<Venue> = ({
     name,
@@ -91,6 +93,7 @@ export const Map: React.FC = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
       />
+      {searchText}
     </MapContainer>
   )
 }
