@@ -1,31 +1,9 @@
 import React, { useState } from 'react'
-import { LatLngTuple } from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
+import type { LatLngTuple } from 'leaflet'
 
-import { useSearch } from '../../hooks/use-search'
+import { useData, Venue } from '../../hooks/use-data'
 import './leaflet.css'
-
-type Venue = {
-  id: string
-  name: string
-  coordinates: LatLngTuple
-  system?: string
-  price?: number
-  moneyBack?: boolean
-  notes?: string
-}
-
-const venues: Venue[] = [
-  {
-    id: '960',
-    name: 'Budapest Park',
-    coordinates: [47.4676345, 19.0745992],
-    system: 'Park',
-    price: 300,
-    moneyBack: false,
-    notes: 'teszt',
-  },
-]
 
 const budapestCoords: LatLngTuple = [47.497913, 19.040236]
 
@@ -44,8 +22,8 @@ function toMoneyBackString(moneyBack?: boolean) {
 }
 
 export const Map: React.FC = () => {
+  const { venues } = useData()
   const [activeVenue, setActiveVenue] = useState<Venue | null>()
-  const { searchText } = useSearch()
 
   const ActiveVenuePopup: React.FC<Venue> = ({
     name,
@@ -80,7 +58,7 @@ export const Map: React.FC = () => {
   return (
     <MapContainer center={budapestCoords} zoom={13} scrollWheelZoom={true}>
       {activeVenue && <ActiveVenuePopup {...activeVenue} />}
-      {venues.map(venue => (
+      {venues.map((venue: Venue) => (
         <Marker
           key={venue.id}
           position={venue.coordinates}
@@ -93,7 +71,6 @@ export const Map: React.FC = () => {
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution="&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
       />
-      {searchText}
     </MapContainer>
   )
 }
