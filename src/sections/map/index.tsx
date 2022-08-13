@@ -1,11 +1,10 @@
 import React, { useState } from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
-import type { LatLngTuple } from 'leaflet'
 
 import { useData, Venue } from '../../hooks/use-data'
 import './leaflet.css'
 
-const budapestCoords: LatLngTuple = [47.497913, 19.040236]
+const budapestCoords: [number, number] = [47.497913, 19.040236]
 
 const VenueProp: React.FC<{ label: string, value: string }> = ({ label, value = '' }) => (
   <div className="flex gap-4 my-1.5">
@@ -27,7 +26,8 @@ export const Map: React.FC = () => {
 
   const ActiveVenuePopup: React.FC<Venue> = ({
     name,
-    coordinates,
+    lat,
+    lng,
     system,
     price,
     moneyBack,
@@ -35,7 +35,7 @@ export const Map: React.FC = () => {
   }) => {
     return (
       <Popup
-        position={coordinates}
+        position={[lat, lng]}
         eventHandlers={{
           popupclose: () => { setActiveVenue(null) }
         }}
@@ -61,7 +61,7 @@ export const Map: React.FC = () => {
       {venues.map((venue: Venue) => (
         <Marker
           key={venue.id}
-          position={venue.coordinates}
+          position={[venue.lat, venue.lng]}
           eventHandlers={{
             click: () => { setActiveVenue(venue) }
           }}

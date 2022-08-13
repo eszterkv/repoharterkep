@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import type { LatLngTuple } from 'leaflet'
 
 export type Venue = {
   id: string
   name: string
-  coordinates: LatLngTuple
+  lat: number
+  lng: number
   system?: string
   price?: number
   moneyBack?: boolean
@@ -15,7 +15,8 @@ const fakeVenues: Venue[] = [
   {
     id: '960',
     name: 'Budapest Park',
-    coordinates: [47.4676345, 19.0745992],
+    lat: 47.4676345,
+    lng: 19.0745992,
     system: 'Park',
     price: 300,
     moneyBack: false,
@@ -24,25 +25,8 @@ const fakeVenues: Venue[] = [
   {
     id: '960',
     name: 'Budapest Park 1',
-    coordinates: [47.4676345, 19.0745992],
-    system: 'Park',
-    price: 300,
-    moneyBack: false,
-    notes: 'teszt',
-  },
-  {
-    id: '960',
-    name: 'Budapest Park 2',
-    coordinates: [47.4676345, 19.0745992],
-    system: 'Park',
-    price: 300,
-    moneyBack: false,
-    notes: 'teszt',
-  },
-  {
-    id: '960',
-    name: 'Bubo',
-    coordinates: [47.4676345, 19.0745992],
+    lat: 47.4676345,
+    lng: 19.0745992,
     system: 'Park',
     price: 300,
     moneyBack: false,
