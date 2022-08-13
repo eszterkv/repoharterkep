@@ -1,4 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
+import Airtable from 'airtable'
 
 export type Venue = {
   id: string
@@ -11,37 +12,30 @@ export type Venue = {
   notes?: string
 }
 
-const fakeVenues: Venue[] = [
-  {
-    id: '960',
-    name: 'Budapest Park',
-    lat: 47.4676345,
-    lng: 19.0745992,
-    system: 'Park',
-    price: 300,
-    moneyBack: false,
-    notes: 'teszt',
-  },
-  {
-    id: '960',
-    name: 'Budapest Park 1',
-    lat: 47.4676345,
-    lng: 19.0745992,
-    system: 'Park',
-    price: 300,
-    moneyBack: false,
-    notes: 'teszt',
-  },
-]
-
 const DataContext = createContext({} as any)
+
+const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
+  .base(process.env.AIRTABLE_BASE)
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [venues, setVenues] = useState<Venue[]>([])
 
-  useEffect(() => {
-    setVenues(fakeVenues)
-  }, [])
+  useEffect(fetchData, [])
+
+  function fetchData() {
+    const results: Venue[] = []
+
+    base('repohar').select().eachPage(function page(records, fetchNextPage) {
+      records.forEach(function(record) {
+        results.push(record.fields as Venue)
+      });
+      fetchNextPage()
+    }, function done(err) {
+      if (err) { console.error(err); return }
+
+      setVenues(results)
+    })
+  }
 
   return (
     <DataContext.Provider value={{ venues }}>
