@@ -1,8 +1,9 @@
-import { Map } from './sections/map'
+import { Header, Map } from './sections'
 
 export const App: React.FC = () => (
   <>
-    <main>
+    <Header />
+    <main style={{ maxHeight: 'calc(100vh - 120px)' }} className="overflow-hidden">
       <Map />
     </main>
   </>

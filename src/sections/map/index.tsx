@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Icon, LatLngTuple } from 'leaflet'
+import { LatLngTuple } from 'leaflet'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import './leaflet.css'
@@ -29,8 +29,8 @@ const venues: Venue[] = [
 const budapestCoords: LatLngTuple = [47.497913, 19.040236]
 
 const VenueProp: React.FC<{ label: string, value: string }> = ({ label, value = '' }) => (
-  <div>
-    <dt>{label}</dt>
+  <div className="flex gap-4 my-1.5">
+    <dt className="w-1/2">{label}</dt>
     <dd>{value}</dd>
   </div>
 )
@@ -59,15 +59,17 @@ export const Map: React.FC = () => {
         eventHandlers={{
           popupclose: () => { setActiveVenue(null) }
         }}
+        minWidth={250}
+        maxWidth={300}
       >
         <div>
-          <h2>{name}</h2>
+          <h2 className="text-lg font-medium mb-3">{name}</h2>
           <dl>
             <VenueProp label="Rendszer" value={system || 'nem ismert'} />
-            <VenueProp label="Ár" value={`${price} Ft`} />
+            <VenueProp label="Díj" value={`${price} Ft`} />
             <VenueProp label="Visszaadják a pénzt?" value={toMoneyBackString(moneyBack)} />
           </dl>
-          <p>{notes}</p>
+          {notes && <p><strong>Egyéb:</strong> {notes}</p>}
         </div>
       </Popup>
     )
