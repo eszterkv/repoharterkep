@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import Airtable from 'airtable'
+import axios from 'axios'
 
 export type Venue = {
   id: string
@@ -14,27 +14,20 @@ export type Venue = {
 
 const DataContext = createContext({} as any)
 
-const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
-  .base(process.env.AIRTABLE_BASE)
-
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [venues, setVenues] = useState<Venue[]>([])
 
-  useEffect(fetchData, [])
+  useEffect(() => { fetchData() }, [])
 
-  function fetchData() {
-    const results: Venue[] = []
+  async function fetchData() {
+    try {
+      const res = await axios.get('/venues')
+      console.log(res)
 
-    base('repohar').select().eachPage(function page(records, fetchNextPage) {
-      records.forEach(function(record) {
-        results.push(record.fields as Venue)
-      });
-      fetchNextPage()
-    }, function done(err) {
-      if (err) { console.error(err); return }
-
-      setVenues(results)
-    })
+      //const results: Venue[] = data
+    } catch (error) {
+      console.error(error)
+    }
   }
 
   return (
