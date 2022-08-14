@@ -21,10 +21,8 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   async function fetchData() {
     try {
-      const res = await axios.get('/venues')
-      console.log(res)
-
-      //const results: Venue[] = data
+      const res = await axios.get('/api/venues')
+      setVenues(res.data)
     } catch (error) {
       console.error(error)
     }
