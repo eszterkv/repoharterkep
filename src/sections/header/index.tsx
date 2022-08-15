@@ -2,26 +2,40 @@ import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDebouncedCallback } from 'use-debounce'
 import axios from 'axios'
-import { X } from 'react-feather'
+import { X, MessageSquare } from 'react-feather'
 
+import { FeedbackForm } from '../../components/feedback-form'
 import { useSearch } from '../../hooks/use-search'
 import type { Venue } from '../../hooks/use-data'
 
-const inputClassName = 'border border-gray-400 h-8 px-2 w-full mt-1 md:max-w-sm rounded-sm'
-const btnClassName = 'bg-orange-500 hover:bg-orange-400 text-white h-8 px-4 rounded-sm'
+export const formClassName = 'bg-white p-4 md:p-8 rounded shadow-xl w-full md:max-w-sm'
+export const inputClassName = 'border border-gray-400 h-8 px-2 w-full mt-1 md:max-w-sm rounded-sm'
+export const btnClassName = 'flex items-center gap-1 bg-orange-500 text-white h-8 px-3 rounded-sm font-medium hover:opacity-90 drop-shadow transition-colors'
+export const overlayClassName = 'absolute top-0 left-0 w-screen h-screen bg-gray-400/50 flex items-center justify-center'
 
 export const Header: React.FC = () => {
   const searchRef = useRef<HTMLInputElement>(null)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+
   const { setSearchText, searchResults, setActiveVenue } = useSearch()
-  const { register, handleSubmit, formState } = useForm()
+  const { register, handleSubmit, formState, reset } = useForm()
 
   const search = useDebouncedCallback((e) => {
     setSearchText(e.target.value)
   }, 200)
 
   function onSubmit(data: Record<string, any>) {
-    axios.post('/api/submit', data)
+    try {
+      axios.post('/api/submit', data)
+      setSuccess('Köszönjük!')
+      reset()
+      setTimeout(() => { setIsModalOpen(false) }, 900)
+    } catch (err: any) {
+      setError('Ez nem sikerült, kérlek, próbáld később.')
+    }
   }
 
   return (
@@ -67,23 +81,31 @@ export const Header: React.FC = () => {
             </ul>
           )}
         </div>
-        <button
-          className={btnClassName + ' mt-4'}
-          onClick={() => { setIsModalOpen(true) }}
-        >
-          Új helyet jelentek
-        </button>
+        <div className="flex gap-4">
+          <button
+            className={btnClassName + ' mt-4'}
+            onClick={() => { setIsModalOpen(true) }}
+          >
+            Új helyet jelentek
+          </button>
+          <button
+            className={btnClassName + ' mt-4 text-gray-700 bg-gray-200'}
+            onClick={() => { setIsFeedbackModalOpen(true) }}
+          >
+            <MessageSquare size={18} /> Visszajelzés
+          </button>
+        </div>
       </header>
       {isModalOpen && (
         <div
-          className="absolute top-0 left-0 w-screen h-screen bg-gray-400/50 flex items-center justify-center"
+          className={overlayClassName}
           style={{ zIndex: 9999 }}
           id="overlay"
           onClick={(e: any) => {
             if (e.target.id === 'overlay') setIsModalOpen(false)
           }}
         >
-          <div id="form" className="bg-white p-4 md:p-8 rounded shadow-xl w-full md:max-w-sm">
+          <div id="form" className={formClassName}>
             <h2 className="text-lg font-semibold mb-4">
               Új hely jelentése
             </h2>
@@ -93,15 +115,19 @@ export const Header: React.FC = () => {
             >
               <label>
                 Hely neve<br />
-                <input {...register('name')} className={inputClassName} />
+                <input {...register('name')} className={inputClassName} placeholder="Pl. Bálna" />
               </label>
               <label>
-                Rendszer (pl. Cup Revolution)<br />
-                <input {...register('system')} className={inputClassName} />
+                Hol van?<br />
+                <input {...register('location')} className={inputClassName} placeholder="Pl. Szeged, Dob utca stb." />
+              </label>
+              <label>
+                Rendszer<br />
+                <input {...register('system')} className={inputClassName} placeholder="Pl. Cup Revolution" />
               </label>
               <label>
                 Visszaadják a pénzt?<br />
-                <input {...register('notes')} className={inputClassName} />
+                <input {...register('moneyBack')} className={inputClassName} placeholder="Pl. igen / nem / csak a Juci" />
               </label>
               <label>
                 Egyéb infó<br />
@@ -111,9 +137,22 @@ export const Header: React.FC = () => {
                 Mehet!
               </button>
             </form>
+            <div className="h-5 relative mt-3">
+              {error && (
+                <p className="absolute text-red-600 text-sm">
+                  {error}
+                </p>
+              )}
+              {success && (
+                <p className="absolute text-green-700 text-sm">
+                  {success}
+                </p>
+              )}
+            </div>
           </div>
         </div>
       )}
+      {isFeedbackModalOpen && <FeedbackForm onClose={() => { setIsFeedbackModalOpen(false) }} />}
     </>
   )
 }

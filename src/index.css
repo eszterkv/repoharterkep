@@ -5,3 +5,7 @@
 label {
   display: block;
 }
+
+::placeholder {
+  @apply text-sm;
+}
