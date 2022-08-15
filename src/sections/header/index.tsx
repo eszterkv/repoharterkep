@@ -2,7 +2,7 @@ import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDebouncedCallback } from 'use-debounce'
 import axios from 'axios'
-import { X, MessageSquare } from 'react-feather'
+import { X, MessageSquare, PlusCircle } from 'react-feather'
 
 import { FeedbackForm } from '../../components/feedback-form'
 import { useSearch } from '../../hooks/use-search'
@@ -10,7 +10,7 @@ import type { Venue } from '../../hooks/use-data'
 
 export const formClassName = 'bg-white p-4 md:p-8 rounded shadow-xl w-full md:max-w-sm'
 export const inputClassName = 'border border-gray-400 h-8 px-2 w-full mt-1 md:max-w-sm rounded-sm'
-export const btnClassName = 'flex items-center gap-1 bg-orange-500 text-white h-8 px-3 rounded-sm font-medium hover:opacity-90 drop-shadow transition-colors'
+export const btnClassName = 'flex items-center justify-center gap-1.5 bg-orange-500 text-white h-8 px-3 rounded-sm font-medium hover:opacity-90 drop-shadow transition-colors w-full'
 export const overlayClassName = 'absolute top-0 left-0 w-screen h-screen bg-gray-400/50 flex items-center justify-center'
 
 export const Header: React.FC = () => {
@@ -81,12 +81,12 @@ export const Header: React.FC = () => {
             </ul>
           )}
         </div>
-        <div className="flex gap-4">
+        <div className="flex gap-4 max-w-sm">
           <button
             className={btnClassName + ' mt-4'}
             onClick={() => { setIsModalOpen(true) }}
           >
-            Új helyet jelentek
+            <PlusCircle size={18} /> <span>Új hely<span className="hidden md:inline">et jelentek</span></span>
           </button>
           <button
             className={btnClassName + ' mt-4 text-gray-700 bg-gray-200'}
