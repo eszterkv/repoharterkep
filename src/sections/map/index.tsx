@@ -70,7 +70,10 @@ export const Map: React.FC = () => {
         />
       ))}
       <TileLayer
-        url={`https://api.mapbox.com/styles/v1/ekov/${process.env.REACT_APP_TILESET_ID}/tiles/{z}/{x}/{y}/?access_token=${process.env.REACT_APP_MAPBOX_PK}`}
+        url={
+          //`https://api.mapbox.com/styles/v1/ekov/${process.env.REACT_APP_TILESET_ID}/tiles/{z}/{x}/{y}/?access_token=${process.env.REACT_APP_MAPBOX_PK}`
+          'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+          }
         attribution="&copy <a href='http://osm.org/copyright'>OpenStreetMap</a> contributors"
       />
     </MapContainer>
