@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 
 import { useData, Venue } from '../../hooks/use-data'
+import { useSearch } from '../../hooks/use-search'
 import './leaflet.css'
 
 const budapestCoords: [number, number] = [47.497913, 19.040236]
@@ -22,7 +23,7 @@ function toMoneyBackString(moneyBack?: boolean) {
 
 export const Map: React.FC = () => {
   const { venues } = useData()
-  const [activeVenue, setActiveVenue] = useState<Venue | null>()
+  const { activeVenue, setActiveVenue } = useSearch()
 
   const ActiveVenuePopup: React.FC<Venue> = ({
     name,
