@@ -29,7 +29,7 @@ export const Map: React.FC = () => {
     lat,
     lng,
     system,
-    price,
+    // price,
     moneyBack,
     notes,
   }) => {
@@ -46,7 +46,6 @@ export const Map: React.FC = () => {
           <h2 className="text-lg font-medium mb-3">{name}</h2>
           <dl>
             <VenueProp label="Rendszer" value={system || 'nem ismert'} />
-            <VenueProp label="Díj" value={`${price} Ft`} />
             <VenueProp label="Visszaadják a pénzt?" value={toMoneyBackString(moneyBack)} />
           </dl>
           {notes && <p><strong>Egyéb:</strong> {notes}</p>}
@@ -56,7 +55,7 @@ export const Map: React.FC = () => {
   }
 
   return (
-    <MapContainer center={budapestCoords} zoom={13} scrollWheelZoom={true}>
+    <MapContainer center={budapestCoords} zoom={12} scrollWheelZoom={true}>
       {activeVenue && <ActiveVenuePopup {...activeVenue} />}
       {venues.map((venue: Venue) => (
         <Marker
