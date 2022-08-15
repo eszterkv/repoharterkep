@@ -51,7 +51,7 @@ export const Header: React.FC = () => {
           )}
         </div>
         <button
-          className={btnClassName}
+          className={btnClassName + ' mt-4'}
           onClick={() => { setIsModalOpen(true) }}
         >
           Új helyet jelentek
@@ -61,9 +61,12 @@ export const Header: React.FC = () => {
         <div
           className="absolute top-0 left-0 w-screen h-screen bg-gray-400/50 flex items-center justify-center"
           style={{ zIndex: 9999 }}
-          onClick={() => {/* setIsModalOpen(false)*/ }}
+          id="overlay"
+          onClick={(e: any) => {
+            if (e.target.id === 'overlay') setIsModalOpen(false)
+          }}
         >
-          <div className="bg-white p-4 md:p-8 rounded shadow-xl w-full md:max-w-sm">
+          <div id="form" className="bg-white p-4 md:p-8 rounded shadow-xl w-full md:max-w-sm">
             <h2 className="text-lg font-semibold mb-4">
               Új hely jelentése
             </h2>
