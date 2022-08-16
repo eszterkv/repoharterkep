@@ -8,7 +8,7 @@ export type Venue = {
   lng: number
   system?: string
   price?: number
-  moneyBack?: boolean
+  moneyBack?: string
   notes?: string
 }
 

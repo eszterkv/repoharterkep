@@ -15,13 +15,6 @@ const VenueProp: React.FC<{ label: string, value: string }> = ({ label, value = 
   </div>
 )
 
-function toMoneyBackString(moneyBack?: boolean) {
-  if (moneyBack === null || moneyBack === undefined)
-    return 'nem tudni'
-
-  return moneyBack ? 'igen' : 'nem'
-}
-
 export const Map: React.FC = () => {
   const { venues } = useData()
   const { activeVenue, setActiveVenue } = useSearch()
@@ -48,7 +41,7 @@ export const Map: React.FC = () => {
           <h2 className="text-lg font-medium mb-3">{name}</h2>
           <dl>
             <VenueProp label="Rendszer" value={system || 'nem ismert'} />
-            <VenueProp label="Visszaadják a pénzt?" value={toMoneyBackString(moneyBack)} />
+            <VenueProp label="Visszaadják a pénzt?" value={moneyBack || 'nem tudni'} />
           </dl>
           {notes && <p><strong>Egyéb:</strong> {notes}</p>}
         </div>
