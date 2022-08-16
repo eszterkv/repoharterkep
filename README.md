@@ -1,10 +1,12 @@
 # repohár térkép / re-cup map
 
-## Contribution
-
 For **content** issues, please go to the [website](https://repoharterkep.hu) and click 'új hely' (add new place) or 'Visszajelzés' (general feedback).
 
-For features and bug fixes, read on.
+If something’s not working or you have an idea, please submit an issue.
+
+If you’d like to contribute, please read on.
+
+## Contribution
 
 ### Running the app locally
 
