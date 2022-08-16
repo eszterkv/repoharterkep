@@ -5,7 +5,7 @@ const base = new Airtable({ apiKey: process.env.AIRTABLE_API_KEY })
   .base(process.env.AIRTABLE_BASE || '')
 
 export default function handler(_: VercelRequest, response: VercelResponse) {
-  const results = []
+  const results: Record<string, any> = []
 
   base('repohar').select().eachPage(function page(records, fetchNextPage) {
     records.forEach(function(record) {
@@ -15,6 +15,6 @@ export default function handler(_: VercelRequest, response: VercelResponse) {
   }, function done(err) {
     if (err) { console.error(err); return }
 
-    response.status(200).send(results as any)
+    response.status(200).send(results)
   })
 }
