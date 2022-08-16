@@ -16,7 +16,7 @@ For features and bug fixes, read on.
 
 #### Grab environment variables.
 
-Project owner will send them to you on [Discord](https://discord.com/channels/1009105077300109463/). Trouble joining? Email `repoharterkep` at `pm.me`.
+Project owner will share them with you in a secure email. Email `repoharterkep` at `pm.me` (including your github username) if you’d like them.
 
 #### Clone the project and run it locally
 
