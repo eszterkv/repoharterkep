@@ -6,6 +6,12 @@ label {
   display: block;
 }
 
+.leaflet-control-attribution {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+}
+
 ::placeholder {
   @apply text-sm;
 }
