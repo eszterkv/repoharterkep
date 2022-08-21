@@ -40,60 +40,76 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className="h-40 mx-auto max-w-screen-xl p-4 md:p-8">
-        <h1 className="text-xl font-semibold text-gray-800">
+      <header className="h-40 mx-auto max-w-screen-xl p-4 md:p-8 flex flex-wrap gap-x-8">
+        <h1 className="text-xl font-semibold text-gray-800 w-full shrink-0">
           Repohár térkép
         </h1>
         <div className="w-full md:max-w-sm relative">
-          <div className="relative">
-            <input
-              type="text"
-              aria-label="keresés"
-              placeholder="keresés"
-              className={inputClassName}
-              onChange={search}
-              ref={searchRef}
-            />
+          <div>
+            <div className="relative">
+              <input
+                type="text"
+                aria-label="keresés"
+                placeholder="keresés"
+                className={inputClassName}
+                onChange={search}
+                ref={searchRef}
+              />
+              <button
+                onClick={() => {
+                  if (searchRef?.current) {
+                    searchRef.current.value = ''
+                    setSearchText('')
+                  }
+                }}
+                className="absolute top-2 right-1 text-gray-400 hover:text-gray-600"
+                aria-label="keresés törlése"
+              >
+                <X />
+              </button>
+            </div>
+            {searchResults.length > 0 && (
+              <ul className="absolute w-full text-gray-800" style={{ zIndex: 9999 }}>
+                {searchResults.map((venue: Venue) => (
+                  <li
+                    key={`${venue.name}${venue.id}`}
+                    className="h-8 px-2 bg-gray-100 hover:bg-gray-200 border-b border-gray-300 flex items-center cursor-pointer"
+                    onClick={() => { setActiveVenue(venue) }}
+                  >
+                    {venue.name}
+                  </li>
+                ))}
+              </ul>
+            )}
+          </div>
+          <div className="flex gap-4 max-w-sm">
             <button
-              onClick={() => {
-                if (searchRef?.current) {
-                  searchRef.current.value = ''
-                  setSearchText('')
-                }
-              }}
-              className="absolute top-2 right-1 text-gray-400 hover:text-gray-600"
-              aria-label="keresés törlése"
+              className={btnClassName + ' mt-4'}
+              onClick={() => { setIsModalOpen(true) }}
             >
-              <X />
+              <PlusCircle size={18} /> <span>Új hely<span className="hidden md:inline">et jelentek</span></span>
+            </button>
+            <button
+              className={btnClassName + ' mt-4 text-gray-700 bg-gray-200'}
+              onClick={() => { setIsFeedbackModalOpen(true) }}
+            >
+              <MessageSquare size={18} /> Visszajelzés
             </button>
           </div>
-          {searchResults.length > 0 && (
-            <ul className="absolute w-full text-gray-800" style={{ zIndex: 9999 }}>
-              {searchResults.map((venue: Venue) => (
-                <li
-                  key={`${venue.name}${venue.id}`}
-                  className="h-8 px-2 bg-gray-100 hover:bg-gray-200 border-b border-gray-300 flex items-center cursor-pointer"
-                  onClick={() => { setActiveVenue(venue) }}
-                >
-                  {venue.name}
-                </li>
-              ))}
-            </ul>
-          )}
         </div>
-        <div className="flex gap-4 max-w-sm">
-          <button
-            className={btnClassName + ' mt-4'}
-            onClick={() => { setIsModalOpen(true) }}
-          >
-            <PlusCircle size={18} /> <span>Új hely<span className="hidden md:inline">et jelentek</span></span>
-          </button>
-          <button
-            className={btnClassName + ' mt-4 text-gray-700 bg-gray-200'}
-            onClick={() => { setIsFeedbackModalOpen(true) }}
-          >
-            <MessageSquare size={18} /> Visszajelzés
-          </button>
+        <div className="flex text-xs gap-3 md:text-sm md:block mt-1.5 md:mt-0">
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-emerald-600 relative top-px" />
+            visszaadják a pénzt
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-red-600 relative top-px" />
+            nem adják vissza<span className="hidden md:inline"> a pénzt</span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <div className="w-3 h-3 rounded-full bg-gray-600 relative top-px" />
+            nem tudni
+          </div>
         </div>
       </header>
       {isModalOpen && (

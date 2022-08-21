@@ -15,6 +15,13 @@ const VenueProp: React.FC<{ label: string, value: string }> = ({ label, value = 
   </div>
 )
 
+function getLocationMarkerVariant(moneyBack: string = '') {
+  if (moneyBack.startsWith('igen')) return '-green'
+  if (moneyBack.startsWith('nem')) return '-red'
+
+  return ''
+}
+
 export const Map: React.FC = () => {
   const { venues } = useData()
   const { activeVenue, setActiveVenue } = useSearch()
@@ -56,7 +63,10 @@ export const Map: React.FC = () => {
         <Marker
           key={venue.id}
           position={[venue.lat, venue.lng]}
-          icon={new Icon({ iconUrl: '/assets/location-marker.svg', iconSize: [28, 28] })}
+          icon={new Icon({
+            iconUrl: `/assets/location-marker${getLocationMarkerVariant(venue.moneyBack)}.svg`,
+            iconSize: [28, 28],
+          })}
           eventHandlers={{
             click: () => { setActiveVenue(venue) }
           }}
