@@ -42,7 +42,7 @@ export const Header: React.FC = () => {
     <>
       <header className="h-40 mx-auto max-w-screen-xl p-4 md:p-8 flex flex-wrap gap-x-8">
         <h1 className="text-xl font-semibold text-gray-800 w-full shrink-0">
-          Repohár térkép
+          Újratölthető pohár térkép
         </h1>
         <div className="w-full md:max-w-sm relative">
           <div>
