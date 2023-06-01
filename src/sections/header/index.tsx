@@ -19,12 +19,14 @@ export const Header: React.FC = () => {
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
+  const [searchOpen, setSearchOpen] = useState(false)
 
   const { setSearchText, searchResults, setActiveVenue } = useSearch()
   const { register, handleSubmit, formState, reset } = useForm()
 
   const search = useDebouncedCallback((e) => {
     setSearchText(e.target.value)
+    if (!searchOpen) setSearchOpen(true)
   }, 200)
 
   function onSubmit(data: Record<string, any>) {
@@ -68,13 +70,18 @@ export const Header: React.FC = () => {
                 <X />
               </button>
             </div>
-            {searchResults.length > 0 && (
+            {searchOpen && searchResults.length > 0 && (
               <ul className="absolute w-full text-gray-800" style={{ zIndex: 9999 }}>
                 {searchResults.map((venue: Venue) => (
                   <li
                     key={`${venue.name}${venue.id}`}
                     className="h-8 px-2 bg-gray-100 hover:bg-gray-200 border-b border-gray-300 flex items-center cursor-pointer"
-                    onClick={() => { setActiveVenue(venue) }}
+                    onClick={() => {
+                      if (searchRef.current) searchRef.current.value = venue.name
+                      setSearchText(venue.name)
+                      setSearchOpen(false)
+                      setActiveVenue(venue)
+                    }}
                   >
                     {venue.name}
                   </li>
