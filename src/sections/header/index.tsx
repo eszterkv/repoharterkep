@@ -5,6 +5,7 @@ import axios from 'axios'
 import { X, MessageSquare, PlusCircle } from 'react-feather'
 
 import { FeedbackForm } from '../../components/feedback-form'
+import { useData } from '../../hooks/use-data'
 import { useSearch } from '../../hooks/use-search'
 import type { Venue } from '../../hooks/use-data'
 
@@ -13,8 +14,16 @@ export const inputClassName = 'border border-gray-400 h-8 px-2 w-full mt-1 md:ma
 export const btnClassName = 'flex items-center justify-center gap-1.5 bg-orange-500 text-white h-8 px-3 rounded-sm font-medium hover:opacity-90 drop-shadow transition-colors w-full'
 export const overlayClassName = 'absolute top-0 left-0 w-screen h-screen bg-gray-400/50 flex items-center justify-center'
 
+const filterOptions = [
+  { value: 'moneyback', label: 'csak ahol visszaadják a pénzt' },
+  { value: 'type_cuprevolution', label: 'Cup Revolution' },
+  { value: 'type_hanaplast', label: 'Hanaplast' },
+  { value: 'type_other', label: 'egyéb' },
+]
+
 export const Header: React.FC = () => {
   const searchRef = useRef<HTMLInputElement>(null)
+  const { filters, setFilters } = useData()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
   const [error, setError] = useState('')
@@ -42,7 +51,7 @@ export const Header: React.FC = () => {
 
   return (
     <>
-      <header className="h-40 mx-auto max-w-screen-xl p-4 md:p-8 flex flex-wrap gap-x-8">
+      <header className="h-50 mx-auto max-w-screen-xl p-4 md:p-8 flex flex-wrap gap-x-8">
         <h1 className="text-xl font-semibold text-gray-800 w-full shrink-0">
           Újratölthető pohár térkép
         </h1>
@@ -104,7 +113,20 @@ export const Header: React.FC = () => {
             </button>
           </div>
         </div>
-        <div className="flex text-xs gap-3 md:text-sm md:block mt-1.5 md:mt-0">
+        <div className="text-xs gap-3 md:text-sm mt-1.5 md:mt-0">
+          <strong className="font-semibold">Szűrés</strong><br />
+          {filterOptions.map(({ value, label }) => (
+            <label key={value} className="flex gap-1">
+              <input
+                type="checkbox"
+                checked={filters[value]}
+                onChange={() => { setFilters({ ...filters, [value]: !filters[value] }) }}
+              /> {label}
+            </label>
+          ))}
+        </div>
+        <div className="flex text-xs gap-3 md:text-sm md:block mt-1.5 md:mt-0 text-gray-600">
+          <strong>Jelmagyarázat</strong><br />
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-emerald-600 relative top-px" />
             visszaadják a pénzt

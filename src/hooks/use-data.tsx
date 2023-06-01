@@ -15,7 +15,16 @@ export type Venue = {
 const DataContext = createContext({} as any)
 
 export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const DEFAULT_FILTERS = {
+    moneyback: false,
+    type_cuprevolution: true,
+    type_hanaplast: true,
+    type_other: true,
+  }
+
   const [venues, setVenues] = useState<Venue[]>([])
+  const [filteredVenues, setFilteredVenues] = useState<Venue[]>([])
+  const [filters, setFilters] = useState(DEFAULT_FILTERS)
 
   useEffect(() => { fetchData() }, [])
 
@@ -23,13 +32,29 @@ export const DataProvider: React.FC<{ children: React.ReactNode }> = ({ children
     try {
       const res = await axios.get('/api/venues')
       setVenues(res.data)
+      setFilteredVenues(res.data)
     } catch (error) {
       console.error(error)
     }
   }
 
+  useEffect(() => {
+    const filtered = venues
+      .filter(venue => filters.moneyback ? venue.moneyBack?.startsWith('igen') : true)
+      .filter(venue => {
+        if (!filters.type_cuprevolution && venue.system === 'Cup Revolution') return false
+        if (!filters.type_hanaplast && venue.system === 'Hanaplast') return false
+        if (!filters.type_other && !['Hanaplast', 'Cup Revolution'].includes(venue.system as any)) return false
+
+        return true
+      })
+
+
+    setFilteredVenues(filtered)
+  }, [venues, filters, setFilteredVenues])
+
   return (
-    <DataContext.Provider value={{ venues }}>
+    <DataContext.Provider value={{ venues: filteredVenues, filters, setFilters }}>
       {children}
     </DataContext.Provider>
   )
