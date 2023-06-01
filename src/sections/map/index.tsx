@@ -39,7 +39,7 @@ export const Map: React.FC = () => {
       <Popup
         position={[lat, lng]}
         eventHandlers={{
-          popupclose: () => { setActiveVenue(null) }
+          remove: () => { setActiveVenue(null) },
         }}
         minWidth={250}
         maxWidth={300}
@@ -50,7 +50,7 @@ export const Map: React.FC = () => {
             <VenueProp label="Rendszer" value={system || 'nem ismert'} />
             <VenueProp label="Visszaadják a pénzt?" value={moneyBack || 'nem tudni'} />
           </dl>
-          {notes && <p><strong>Egyéb:</strong> {notes}</p>}
+          {notes && <p><strong>Egyéb infó:</strong> {notes}</p>}
         </div>
       </Popup>
     )
