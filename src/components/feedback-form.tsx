@@ -48,7 +48,7 @@ export const FeedbackForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
             </span>
             <textarea
               {...register('message')}
-              className={inputClassName + ' pt-2 h-32'}
+              className={inputClassName + ' pt-2 !h-32'}
               rows={4}
             >
             </textarea>
