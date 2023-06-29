@@ -1,4 +1,5 @@
 import React from 'react'
+import { useTranslation } from 'react-i18next'
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet'
 import { Icon } from 'leaflet'
 
@@ -25,6 +26,7 @@ function getLocationMarkerVariant(moneyBack: string = '') {
 export const Map: React.FC = () => {
   const { venues } = useData()
   const { activeVenue, setActiveVenue } = useSearch()
+  const { t } = useTranslation()
 
   const ActiveVenuePopup: React.FC<Venue> = ({
     name,
@@ -47,10 +49,10 @@ export const Map: React.FC = () => {
         <div>
           <h2 className="text-lg font-medium mb-3">{name}</h2>
           <dl>
-            <VenueProp label="Rendszer" value={system || 'nem ismert'} />
-            <VenueProp label="Visszaadják a pénzt?" value={moneyBack || 'nem tudni'} />
+            <VenueProp label={t('popup.system')} value={system || 'nem ismert'} />
+            <VenueProp label={t('popup.money_back')} value={moneyBack || t('popup.not_known')} />
           </dl>
-          {notes && <p><strong>Egyéb infó:</strong> {notes}</p>}
+          {notes && <p><strong>{t('add_new_form.other_info')}</strong> {notes}</p>}
         </div>
       </Popup>
     )
