@@ -1,8 +1,9 @@
 import { useRef, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { useDebouncedCallback } from 'use-debounce'
-import axios from 'axios'
+import { useTranslation } from 'react-i18next'
 import { X, MessageSquare, PlusCircle } from 'react-feather'
+import axios from 'axios'
 
 import { FeedbackForm } from '../../components/feedback-form'
 import { useData } from '../../hooks/use-data'
@@ -15,14 +16,15 @@ export const btnClassName = 'flex items-center justify-center gap-1.5 bg-orange-
 export const overlayClassName = 'absolute top-0 left-0 w-screen h-screen bg-gray-400/50 flex items-center justify-center'
 
 const filterOptions = [
-  { value: 'moneyback', label: 'csak ahol visszaadják a pénzt' },
-  { value: 'type_cuprevolution', label: 'Cup Revolution' },
-  { value: 'type_hanaplast', label: 'Hanaplast' },
-  { value: 'type_other', label: 'egyéb' },
+  'moneyback',
+  'type_cuprevolution',
+  'type_hanaplast',
+  'type_other',
 ]
 
 export const Header: React.FC = () => {
   const searchRef = useRef<HTMLInputElement>(null)
+  const { t, i18n } = useTranslation()
   const { filters, setFilters } = useData()
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false)
@@ -41,27 +43,33 @@ export const Header: React.FC = () => {
   function onSubmit(data: Record<string, any>) {
     try {
       axios.post('/api/submit', data)
-      setSuccess('Köszönjük!')
+      setSuccess(t('submit_success'))
       reset()
       setTimeout(() => { setIsModalOpen(false) }, 900)
     } catch (err: any) {
-      setError('Ez nem sikerült, kérlek, próbáld később.')
+      setError(t('submit_error'))
     }
   }
 
   return (
     <>
-      <header className="h-50 mx-auto max-w-screen-xl p-4 md:p-8 flex flex-wrap gap-x-8">
+      <header className="relative h-50 mx-auto max-w-screen-xl p-4 md:p-8 flex flex-wrap gap-x-8">
+        <button
+          onClick={() => {i18n.changeLanguage(i18n.language === 'hu' ? 'en' : 'hu')}}
+          className="absolute top-3 right-3 text-sm text-blue-600 font-semibold hover:text-blue-800"
+        >
+          {i18n.language === 'hu' ? 'English' : 'magyar'}
+        </button>
         <h1 className="text-xl font-semibold text-gray-800 w-full shrink-0">
-          Újratölthető pohár térkép
+          {t('title')}
         </h1>
         <div className="w-full md:max-w-sm relative">
           <div>
             <div className="relative">
               <input
                 type="text"
-                aria-label="keresés"
-                placeholder="keresés"
+                aria-label={t('search')}
+                placeholder={t('search')}
                 className={inputClassName}
                 onChange={search}
                 ref={searchRef}
@@ -74,7 +82,7 @@ export const Header: React.FC = () => {
                   }
                 }}
                 className="absolute top-2 right-1 text-gray-400 hover:text-gray-600"
-                aria-label="keresés törlése"
+                aria-label={t('clear_search')}
               >
                 <X />
               </button>
@@ -103,41 +111,42 @@ export const Header: React.FC = () => {
               className={btnClassName + ' mt-4'}
               onClick={() => { setIsModalOpen(true) }}
             >
-              <PlusCircle size={18} /> <span>Új hely<span className="hidden md:inline">et jelentek</span></span>
+              <PlusCircle size={18} /> <span>{t('add_new_pt1')}<span className="hidden md:inline">{t('add_new_pt2')}</span></span>
             </button>
             <button
               className={btnClassName + ' mt-4 text-gray-700 bg-gray-200'}
               onClick={() => { setIsFeedbackModalOpen(true) }}
             >
-              <MessageSquare size={18} /> Visszajelzés
+              <MessageSquare size={18} /> {t('feedback')}
             </button>
           </div>
         </div>
         <div className="text-xs gap-3 md:text-sm mt-1.5 md:mt-0">
-          <strong className="font-semibold">Szűrés</strong><br />
-          {filterOptions.map(({ value, label }) => (
-            <label key={value} className="flex gap-1">
+          <strong className="font-semibold">{t('filter.title')}</strong><br />
+          {filterOptions.map(option => (
+            <label key={option} className="flex gap-1">
               <input
                 type="checkbox"
-                checked={filters[value]}
-                onChange={() => { setFilters({ ...filters, [value]: !filters[value] }) }}
-              /> {label}
+                checked={filters[option]}
+                onChange={() => { setFilters({ ...filters, [option]: !filters[option] }) }}
+              /> {t(`filter.${option}`)}
             </label>
           ))}
         </div>
         <div className="flex text-xs gap-3 md:text-sm md:block mt-1.5 md:mt-0 text-gray-600">
-          <strong>Jelmagyarázat</strong><br />
+          <strong>{t('legend')}</strong><br />
+
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-emerald-600 relative top-px" />
-            visszaadják a pénzt
+            {t('money_back_yes')}
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-red-600 relative top-px" />
-            nem adják vissza<span className="hidden md:inline"> a pénzt</span>
+            {t('money_back_no')}
           </div>
           <div className="flex items-center gap-1.5">
             <div className="w-3 h-3 rounded-full bg-gray-600 relative top-px" />
-            nem tudni
+            {t('money_back_not_known')}
           </div>
         </div>
       </header>
@@ -152,34 +161,34 @@ export const Header: React.FC = () => {
         >
           <div id="form" className={formClassName}>
             <h2 className="text-lg font-semibold mb-4">
-              Új hely jelentése
+              {t('add_new_form.title')}
             </h2>
             <form
               onSubmit={handleSubmit(onSubmit)}
               className="space-y-4"
             >
               <label>
-                Hely neve<br />
-                <input {...register('name')} className={inputClassName} placeholder="Pl. Bálna" />
+                {t('add_new_form.name')}<br />
+                <input {...register('name')} className={inputClassName} placeholder={t('add_new_form.name_placeholder')} />
               </label>
               <label>
-                Hol van?<br />
-                <input {...register('location')} className={inputClassName} placeholder="Pl. Szeged, Dob utca stb." />
+                {t('add_new_form.location')}<br />
+                <input {...register('location')} className={inputClassName} placeholder={t('add_new_form.location_placeholder')} />
               </label>
               <label>
-                Rendszer<br />
-                <input {...register('system')} className={inputClassName} placeholder="Pl. Cup Revolution" />
+                {t('add_new_form.system')}<br />
+                <input {...register('system')} className={inputClassName} placeholder={t('add_new_form.system_placeholder')} />
               </label>
               <label>
-                Visszaadják a pénzt?<br />
-                <input {...register('moneyBack')} className={inputClassName} placeholder="Pl. igen / nem / csak a Juci" />
+                {t('add_new_form.money_back')}<br />
+                <input {...register('moneyBack')} className={inputClassName} placeholder={t('add_new_form.money_back_placeholder')} />
               </label>
               <label>
-                Egyéb infó<br />
+                {t('add_new_form.other_info')}<br />
                 <input {...register('notes')} className={inputClassName} />
               </label>
               <button type="submit" disabled={formState.isSubmitting} className={btnClassName}>
-                Mehet!
+                {t('submit')}
               </button>
             </form>
             <div className="h-5 relative mt-3">

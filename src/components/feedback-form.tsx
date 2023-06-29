@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useForm } from 'react-hook-form'
+import { useTranslation } from 'react-i18next'
 import axios from 'axios'
 
 import {
@@ -10,6 +11,7 @@ import {
 } from '../sections/header'
 
 export const FeedbackForm: React.FC<{ onClose: () => void }> = ({ onClose }) => {
+  const { t } = useTranslation()
   const { register, handleSubmit, formState, reset } = useForm()
   const [error, setError] = useState('')
   const [success, setSuccess] = useState('')
@@ -17,11 +19,11 @@ export const FeedbackForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
   async function onSubmit(data: Record<string, any>) {
     try {
       await axios.post('/api/feedback', data)
-      setSuccess('Köszönjük!')
+      setSuccess(t('submit_success'))
       reset()
       setTimeout(() => { onClose() }, 900)
     } catch (err: any) {
-      setError('Ez nem sikerült, kérlek, próbáld később.')
+      setError(t('submit_error'))
     }
   }
 
@@ -36,7 +38,7 @@ export const FeedbackForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
     >
       <div id="form" className={formClassName}>
         <h2 className="text-lg font-semibold mb-4">
-          Visszajelzés
+          {t('feedback_form.title')}
         </h2>
         <form
           onSubmit={handleSubmit(onSubmit)}
@@ -44,7 +46,7 @@ export const FeedbackForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
         >
           <label>
             <span className="text-sm block mb-2">
-              Hibát találtál? Ötleted van? Vagy csak tetszik? Ide jöhet!<br />
+              {t('feedback_form.text')}<br />
             </span>
             <textarea
               {...register('message')}
@@ -54,7 +56,7 @@ export const FeedbackForm: React.FC<{ onClose: () => void }> = ({ onClose }) => 
             </textarea>
           </label>
           <button type="submit" disabled={formState.isSubmitting} className={btnClassName}>
-            Mehet!
+            {t('submit')}
           </button>
         </form>
         <div className="h-5 relative mt-3">
